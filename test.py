@@ -15,7 +15,7 @@ if uploaded_file is not None:
         # Attempt to repair the mesh
         if not mesh.is_watertight:
             st.warning("The 3D model is not watertight (closed). Attempting to repair the model...")
-            mesh = mesh.fill_holes()  # Fill holes in the mesh
+            mesh = trimesh.repair.fill_holes(mesh)  # Fill holes in the mesh
             if not mesh.is_watertight:
                 st.error("The model could not be repaired. Please upload a closed STL file.")
                 st.stop()  # Stop further processing if the model is still not watertight
