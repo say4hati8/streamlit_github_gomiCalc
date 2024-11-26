@@ -12,8 +12,13 @@ if uploaded_file is not None:
         # Load the mesh using trimesh
         mesh = trimesh.load_mesh(uploaded_file, file_type='stl')
         
-        # Attempt to repair the mesh
-        if not mesh.is_watertight:
+        # Check if the loaded object is a mesh
+        if not isinstance(mesh, trimesh.Trimesh):
+            st.error("Error: The uploaded STL file did not produce a valid mesh. Please upload a different file.")
+            st.stop()
+        
+        # Attempt to repair the mesh if it is not watertight
+        if hasattr(mesh, 'is_watertight') and not mesh.is_watertight:
             st.warning("The 3D model is not watertight (closed). Attempting to repair the model...")
             mesh = trimesh.repair.fill_holes(mesh)  # Fill holes in the mesh
             if not mesh.is_watertight:
